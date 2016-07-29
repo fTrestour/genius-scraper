@@ -34,12 +34,13 @@ def get_artist_songs(artist_url):
     artist_id = get_artist_id(artist_url)
     songs_url = BASE_URL + "artists/songs?for_artist_page=" + str(artist_id)
     soup = create_soup(songs_url)
-    songs = []
     song_list = soup.find("ul", {"class":"song_list primary_list "})
-    song_list = BeautifulSoup(song_list.prettify())
+    song_list = BeautifulSoup(song_list.prettify(), "html.parser")
     song_list = song_list.findAll('a')
-    # pages = soup.find("div", {"class":"pagination"})
-    print song_list[0].
+    song_list = [BeautifulSoup(s.prettify(), "html.parser") for s in song_list]
+    songs = [s.a['href'] for s in song_list]
+    pages = soup.find("div", {"class":"pagination"})
+    print pages.a
 
 BASE_URL = "http://genius.com/"
 artist = "Eminem"

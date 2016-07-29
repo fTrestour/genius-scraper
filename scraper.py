@@ -28,7 +28,10 @@ def get_artist_id(artist_url):
     tag = soup.a
     url = tag['href']
     artist_id = url.split("=")[1].split("&")[0]
-    print artist_id
+    return artist_id
+
+def get_artist_songs(artist_url):
+    artist_id = get_artist_id(artist_url)
 
 
 BASE_URL = "http://genius.com/"
@@ -37,4 +40,4 @@ song = "bonjour"
 artist_url = BASE_URL + "artists/" + artist + "/"
 song_url = BASE_URL + artist + "-" + song + "-lyrics"
 
-get_artist_id(artist_url)
+get_artist_songs(artist_url)

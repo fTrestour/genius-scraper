@@ -30,9 +30,12 @@ def get_artist_id(artist_url):
     artist_id = url.split("=")[1].split("&")[0]
     return artist_id
 
+def get_all_songs_in_page(url):
+    
+
 def get_artist_songs(artist_url):
     artist_id = get_artist_id(artist_url)
-    songs_url = BASE_URL + "artists/songs?for_artist_page=" + str(artist_id)
+    songs_url = BASE_URL + "/artists/songs?for_artist_page=" + str(artist_id)
     soup = create_soup(songs_url)
     song_list = soup.find("ul", {"class":"song_list primary_list "})
     song_list = BeautifulSoup(song_list.prettify(), "html.parser")
@@ -40,12 +43,15 @@ def get_artist_songs(artist_url):
     song_list = [BeautifulSoup(s.prettify(), "html.parser") for s in song_list]
     songs = [s.a['href'] for s in song_list]
     pages = soup.find("div", {"class":"pagination"})
-    print pages.a
+    pages = pages.findAll("a")
+    pages = [BeautifulSoup(s.prettify(), "html.parser") for s in pages]
+    pages = [BASE_URL + p.a['href'] for p in pages]
+    print pages
 
-BASE_URL = "http://genius.com/"
+BASE_URL = "http://genius.com"
 artist = "Eminem"
 song = "bonjour"
-artist_url = BASE_URL + "artists/" + artist + "/"
-song_url = BASE_URL + artist + "-" + song + "-lyrics"
+artist_url = BASE_URL + "/artists/" + artist + "/"
+song_url = BASE_URL + '/' + artist + "-" + song + "-lyrics"
 
 get_artist_songs(artist_url)

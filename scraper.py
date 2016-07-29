@@ -13,12 +13,31 @@ def create_soup(url):
     soup = BeautifulSoup(content, "html.parser")
     return soup
 
-def scrape_song(song_url):
+def scrape_song_lyrics(song_url):
     soup = create_soup(song_url)
     soup = soup.find("lyrics")
     soup = BeautifulSoup(soup.prettify(), "html.parser")
     lyrics = soup.get_text()
     print "Song scraped :........................" + artist + " - " + song
+
+def scrape_song_metadata(song_url):
+    soup = create_soup(song_url)
+    first_soup = soup.find("div", {"class":"song_header-primary_info"})
+    first_soup = BeautifulSoup(soup.prettify(), "html.parser")
+    artist = first_soup.find("a", {"class":"song_header-primary_info-primary_artist"})
+    artist = artist.string
+    print "Artist : " + artist
+    song = first_soup.find("h1", {"class":"song_header-primary_info-title"})
+    song = song.string
+    print "Song   : " + song
+    labels = first_soup.findAll("span", {"class":"song_info-label"})
+    labels = [l.string for l in labels]
+    contents = first_soup.findAll("span", {"class":"song_info-info"})
+    # contents = [c.string for c in contents]
+    for i in range(len(labels)):
+        if contents[i]:
+            print labels[i] + " : "
+            print contents[i]
 
 def get_artist_id(artist_url):
     soup = create_soup(artist_url)
@@ -53,12 +72,13 @@ def get_artist_songs(artist_url):
     pages = [BASE_URL + p.a['href'] for p in pages]
     for p in pages:
         songs += get_all_songs_in_page(p)
+    print len(songs)
     return songs
 
 BASE_URL = "http://genius.com"
-artist = "Eminem"
+artist = "Vald"
 song = "bonjour"
 artist_url = BASE_URL + "/artists/" + artist + "/"
 song_url = BASE_URL + '/' + artist + "-" + song + "-lyrics"
 
-get_artist_songs(artist_url)
+scrape_song_metadata(song_url)

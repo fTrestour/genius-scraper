@@ -2,7 +2,6 @@
 
 from __future__ import unicode_literals
 
-from urlparse import urljoin
 from bs4 import BeautifulSoup
 import requests
 
@@ -21,23 +20,30 @@ def scrape_song_lyrics(song_url):
     print "Song scraped :........................" + artist + " - " + song
 
 def scrape_song_metadata(song_url):
+    result = []
     soup = create_soup(song_url)
     first_soup = soup.find("div", {"class":"song_header-primary_info"})
     first_soup = BeautifulSoup(soup.prettify(), "html.parser")
     artist = first_soup.find("a", {"class":"song_header-primary_info-primary_artist"})
     artist = artist.string
     print "Artist : " + artist
+    result.append({"artist":artist})
     song = first_soup.find("h1", {"class":"song_header-primary_info-title"})
     song = song.string
     print "Song   : " + song
+    result.append({"song":song})
     labels = first_soup.findAll("span", {"class":"song_info-label"})
     labels = [l.string for l in labels]
     contents = first_soup.findAll("span", {"class":"song_info-info"})
-    # contents = [c.string for c in contents]
+    contents = [BeautifulSoup(c.prettify(), "html.parser") for c in contents]
+    contents = [c.a for c in contents]
     for i in range(len(labels)):
         if contents[i]:
             print labels[i] + " : "
-            print contents[i]
+            print contents[i].string
+            print contents[i]['href']
+            result.append({labels[i]:contents[i].string, "url":contents[i]['href']})
+    return result
 
 def get_artist_id(artist_url):
     soup = create_soup(artist_url)
@@ -81,4 +87,4 @@ song = "bonjour"
 artist_url = BASE_URL + "/artists/" + artist + "/"
 song_url = BASE_URL + '/' + artist + "-" + song + "-lyrics"
 
-scrape_song_metadata(song_url)
+print scrape_song_metadata(song_url)

@@ -1,9 +1,8 @@
 # coding: utf8
-
 from __future__ import unicode_literals
 
 from bs4 import BeautifulSoup
-import requests
+
 from util import *
 from retrieve_data import *
 

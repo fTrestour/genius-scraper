@@ -5,5 +5,14 @@
 <form>
   <input placeholder="Put the artist's name here" name="artist">
   <input placeholder="Put the song name here" name="song">
-  <button>Search</button>
+  <button formmethod="post">Search</button>
 </form>
+
+<script type="text/javascript" src="viz.js"></script>
+<script type="text/javascript">
+    function test_func(data) {
+        console.log(data);
+    }
+    test_func({{ data|safe }})
+    console.log(hello())
+</script>

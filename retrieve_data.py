@@ -39,9 +39,9 @@ def scrape_song_metadata(soup, verbose = False):
     for i in range(len(labels)):
         if contents[i]:
             if verbose:
-                print labels[i].encode('utf-8') + " :"
+                print labels[i] + " :"
                 print "    " + clean_text(contents[i].string).encode('utf-8')
-                print "    " + contents[i]['href']
+                print "    " + contents[i]['href'].encode('utf-8')
             result[labels[i]] = {"name" : clean_text(contents[i].string), "link" : geniusify(contents[i]['href'])}
 
     return result
